@@ -316,3 +316,258 @@ settings_db = SettingsDatabase()
             "auto_thumbnail",
             enabled,
         )
+
+    # --------------------------------------------------
+    # Preferred Video Quality
+    # --------------------------------------------------
+
+    async def get_preferred_quality(self) -> str:
+        return await self.get(
+            "preferred_quality",
+            self.DEFAULTS["preferred_quality"],
+        )
+
+    async def set_preferred_quality(
+        self,
+        quality: str,
+    ) -> None:
+        await self.set(
+            "preferred_quality",
+            quality,
+        )
+
+    # --------------------------------------------------
+    # Preferred Output Format
+    # --------------------------------------------------
+
+    async def get_preferred_format(self) -> str:
+        return await self.get(
+            "preferred_format",
+            self.DEFAULTS["preferred_format"],
+        )
+
+    async def set_preferred_format(
+        self,
+        fmt: str,
+    ) -> None:
+        await self.set(
+            "preferred_format",
+            fmt,
+        )
+
+    # --------------------------------------------------
+    # Compression Level
+    # --------------------------------------------------
+
+    async def get_compression_level(self) -> str:
+        return await self.get(
+            "compression_level",
+            "medium",
+        )
+
+    async def set_compression_level(
+        self,
+        level: str,
+    ) -> None:
+        await self.set(
+            "compression_level",
+            level,
+        )
+
+    # --------------------------------------------------
+    # Upload Settings
+    # --------------------------------------------------
+
+    async def stream_uploads(self) -> bool:
+        return await self.get(
+            "stream_uploads",
+            True,
+        )
+
+    async def set_stream_uploads(
+        self,
+        enabled: bool,
+    ) -> None:
+        await self.set(
+            "stream_uploads",
+            enabled,
+        )
+
+    async def delete_after_upload(self) -> bool:
+        return await self.get(
+            "delete_after_upload",
+            True,
+        )
+
+    async def set_delete_after_upload(
+        self,
+        enabled: bool,
+    ) -> None:
+        await self.set(
+            "delete_after_upload",
+            enabled,
+        )
+
+    # --------------------------------------------------
+    # Broadcast
+    # --------------------------------------------------
+
+    async def get_broadcast_delay(self) -> int:
+        return int(
+            await self.get(
+                "broadcast_delay",
+                1,
+            )
+        )
+
+    async def set_broadcast_delay(
+        self,
+        seconds: int,
+    ) -> None:
+        await self.set(
+            "broadcast_delay",
+            seconds,
+        )
+
+    async def get_broadcast_batch_size(self) -> int:
+        return int(
+            await self.get(
+                "broadcast_batch_size",
+                100,
+            )
+        )
+
+    async def set_broadcast_batch_size(
+        self,
+        value: int,
+    ) -> None:
+        await self.set(
+            "broadcast_batch_size",
+            value,
+        )
+
+    # --------------------------------------------------
+    # Auto Join Request
+    # --------------------------------------------------
+
+    async def auto_request_enabled(self) -> bool:
+        return await self.get(
+            "auto_request_enabled",
+            False,
+        )
+
+    async def set_auto_request(
+        self,
+        enabled: bool,
+    ) -> None:
+        await self.set(
+            "auto_request_enabled",
+            enabled,
+        )
+
+    async def auto_request_delay(self) -> int:
+        return int(
+            await self.get(
+                "auto_request_delay",
+                0,
+            )
+        )
+
+    async def set_auto_request_delay(
+        self,
+        seconds: int,
+    ) -> None:
+        await self.set(
+            "auto_request_delay",
+            seconds,
+        )
+
+    # --------------------------------------------------
+    # Auto Reactions
+    # --------------------------------------------------
+
+    async def auto_reaction_enabled(self) -> bool:
+        return await self.get(
+            "auto_reaction_enabled",
+            False,
+        )
+
+    async def set_auto_reaction(
+        self,
+        enabled: bool,
+    ) -> None:
+        await self.set(
+            "auto_reaction_enabled",
+            enabled,
+        )
+
+    async def get_reaction_emoji(self) -> str:
+        return await self.get(
+            "reaction_emoji",
+            "❤️",
+        )
+
+    async def set_reaction_emoji(
+        self,
+        emoji: str,
+    ) -> None:
+        await self.set(
+            "reaction_emoji",
+            emoji,
+        )
+
+    # --------------------------------------------------
+    # Statistics
+    # --------------------------------------------------
+
+    async def statistics_enabled(self) -> bool:
+        return await self.get(
+            "statistics_enabled",
+            True,
+        )
+
+    async def set_statistics(
+        self,
+        enabled: bool,
+    ) -> None:
+        await self.set(
+            "statistics_enabled",
+            enabled,
+        )
+
+    # --------------------------------------------------
+    # Utilities
+    # --------------------------------------------------
+
+    async def reset_defaults(self) -> None:
+        """
+        Reset all global settings to their defaults.
+        """
+
+        for key, value in self.DEFAULTS.items():
+            await self.set(
+                key,
+                value,
+            )
+
+        log.info("Global settings reset.")
+
+    async def bulk_update(
+        self,
+        values: dict[str, Any],
+    ) -> None:
+        """
+        Update multiple settings.
+        """
+
+        for key, value in values.items():
+            await self.set(
+                key,
+                value,
+            )
+
+        log.info(
+            "Updated %d settings.",
+            len(values),
+        )
+
