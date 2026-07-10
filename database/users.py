@@ -309,3 +309,672 @@ class UsersDatabase:
 
 
 users_db = UsersDatabase()
+
+# ---------------------------------------------------------
+# Language
+# ---------------------------------------------------------
+
+    async def get_language(
+        self,
+        user_id: int,
+    ) -> str:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return "en"
+
+        return user.get("language", "en")
+
+
+    async def set_language(
+        self,
+        user_id: int,
+        language: str,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            language=language,
+        )
+
+
+# ---------------------------------------------------------
+# Theme
+# ---------------------------------------------------------
+
+    async def get_theme(
+        self,
+        user_id: int,
+    ) -> str:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return "default"
+
+        return user.get(
+            "theme",
+            "default",
+        )
+
+
+    async def set_theme(
+        self,
+        user_id: int,
+        theme: str,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            theme=theme,
+        )
+
+
+# ---------------------------------------------------------
+# Caption
+# ---------------------------------------------------------
+
+    async def get_caption(
+        self,
+        user_id: int,
+    ) -> str | None:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return None
+
+        return user.get("caption")
+
+
+    async def set_caption(
+        self,
+        user_id: int,
+        caption: str,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            caption=caption,
+        )
+
+
+    async def remove_caption(
+        self,
+        user_id: int,
+    ) -> bool:
+
+        result = await self.collection.update_one(
+            {
+                "user_id": user_id,
+            },
+            {
+                "$unset": {
+                    "caption": "",
+                },
+            },
+        )
+
+        return result.modified_count > 0
+
+
+# ---------------------------------------------------------
+# Thumbnail
+# ---------------------------------------------------------
+
+    async def get_thumbnail(
+        self,
+        user_id: int,
+    ) -> str | None:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return None
+
+        return user.get("thumbnail")
+
+
+    async def set_thumbnail(
+        self,
+        user_id: int,
+        file_id: str,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            thumbnail=file_id,
+        )
+
+
+    async def remove_thumbnail(
+        self,
+        user_id: int,
+    ) -> bool:
+
+        result = await self.collection.update_one(
+            {
+                "user_id": user_id,
+            },
+            {
+                "$unset": {
+                    "thumbnail": "",
+                },
+            },
+        )
+
+        return result.modified_count > 0
+
+
+# ---------------------------------------------------------
+# Auto Thumbnail
+# ---------------------------------------------------------
+
+    async def auto_thumbnail_enabled(
+        self,
+        user_id: int,
+    ) -> bool:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return True
+
+        return user.get(
+            "auto_thumbnail",
+            True,
+        )
+
+
+    async def set_auto_thumbnail(
+        self,
+        user_id: int,
+        enabled: bool,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            auto_thumbnail=enabled,
+        )
+
+
+# ---------------------------------------------------------
+# Auto Caption
+# ---------------------------------------------------------
+
+    async def auto_caption_enabled(
+        self,
+        user_id: int,
+    ) -> bool:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return True
+
+        return user.get(
+            "auto_caption",
+            True,
+        )
+
+
+    async def set_auto_caption(
+        self,
+        user_id: int,
+        enabled: bool,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            auto_caption=enabled,
+        )
+
+
+# ---------------------------------------------------------
+# Auto Rename
+# ---------------------------------------------------------
+
+    async def auto_rename_enabled(
+        self,
+        user_id: int,
+    ) -> bool:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return False
+
+        return user.get(
+            "auto_rename",
+            False,
+        )
+
+
+    async def set_auto_rename(
+        self,
+        user_id: int,
+        enabled: bool,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            auto_rename=enabled,
+        )
+
+
+# ---------------------------------------------------------
+# Rename Template
+# ---------------------------------------------------------
+
+    async def get_template(
+        self,
+        user_id: int,
+    ) -> dict[str, Any]:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return {}
+
+        return user.get(
+            "rename_template",
+            {},
+        )
+
+
+    async def set_template(
+        self,
+        user_id: int,
+        template: dict[str, Any],
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            rename_template=template,
+        )
+
+
+# ---------------------------------------------------------
+# Preferred Format
+# ---------------------------------------------------------
+
+    async def get_format(
+        self,
+        user_id: int,
+    ) -> str:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return "mp4"
+
+        return user.get(
+            "preferred_format",
+            "mp4",
+        )
+
+
+    async def set_format(
+        self,
+        user_id: int,
+        fmt: str,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            preferred_format=fmt,
+        )
+
+
+# ---------------------------------------------------------
+# Preferred Quality
+# ---------------------------------------------------------
+
+    async def get_quality(
+        self,
+        user_id: int,
+    ) -> str:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return "original"
+
+        return user.get(
+            "preferred_quality",
+            "original",
+        )
+
+
+    async def set_quality(
+        self,
+        user_id: int,
+        quality: str,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            preferred_quality=quality,
+        )
+
+
+# ---------------------------------------------------------
+# Notifications
+# ---------------------------------------------------------
+
+    async def notifications_enabled(
+        self,
+        user_id: int,
+    ) -> bool:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return True
+
+        return user.get(
+            "notifications",
+            True,
+        )
+
+
+    async def set_notifications(
+        self,
+        user_id: int,
+        enabled: bool,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            notifications=enabled,
+        )
+
+# ---------------------------------------------------------
+# Premium Management
+# ---------------------------------------------------------
+
+    async def is_premium(
+        self,
+        user_id: int,
+    ) -> bool:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return False
+
+        if not user.get("premium", False):
+            return False
+
+        expiry = user.get("premium_until")
+
+        if expiry is None:
+            return True
+
+        if expiry < self.now():
+            await self.remove_premium(user_id)
+            return False
+
+        return True
+
+
+    async def add_premium(
+        self,
+        user_id: int,
+        expiry: datetime | None = None,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            premium=True,
+            premium_until=expiry,
+        )
+
+
+    async def remove_premium(
+        self,
+        user_id: int,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            premium=False,
+            premium_until=None,
+        )
+
+
+    async def get_premium_expiry(
+        self,
+        user_id: int,
+    ) -> datetime | None:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return None
+
+        return user.get("premium_until")
+
+
+# ---------------------------------------------------------
+# Ban Management
+# ---------------------------------------------------------
+
+    async def ban_user(
+        self,
+        user_id: int,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            is_banned=True,
+        )
+
+
+    async def unban_user(
+        self,
+        user_id: int,
+    ) -> bool:
+
+        return await self.update_user(
+            user_id,
+            is_banned=False,
+        )
+
+
+    async def is_banned(
+        self,
+        user_id: int,
+    ) -> bool:
+
+        user = await self.get_user(user_id)
+
+        if not user:
+            return False
+
+        return user.get("is_banned", False)
+
+
+# ---------------------------------------------------------
+# User Statistics
+# ---------------------------------------------------------
+
+    async def total_users(self) -> int:
+
+        return await self.collection.count_documents({})
+
+
+    async def total_premium_users(self) -> int:
+
+        return await self.collection.count_documents(
+            {
+                "premium": True,
+            }
+        )
+
+
+    async def total_banned_users(self) -> int:
+
+        return await self.collection.count_documents(
+            {
+                "is_banned": True,
+            }
+        )
+
+
+# ---------------------------------------------------------
+# Search
+# ---------------------------------------------------------
+
+    async def search_users(
+        self,
+        keyword: str,
+        limit: int = 20,
+    ) -> list[dict[str, Any]]:
+
+        cursor = self.collection.find(
+            {
+                "$or": [
+                    {
+                        "first_name": {
+                            "$regex": keyword,
+                            "$options": "i",
+                        }
+                    },
+                    {
+                        "username": {
+                            "$regex": keyword,
+                            "$options": "i",
+                        }
+                    },
+                ]
+            }
+        ).limit(limit)
+
+        return await cursor.to_list(length=limit)
+
+
+# ---------------------------------------------------------
+# Pagination
+# ---------------------------------------------------------
+
+    async def get_users(
+        self,
+        page: int = 1,
+        limit: int = 50,
+    ) -> list[dict[str, Any]]:
+
+        skip = (page - 1) * limit
+
+        cursor = (
+            self.collection
+            .find({})
+            .sort("created_at", -1)
+            .skip(skip)
+            .limit(limit)
+        )
+
+        return await cursor.to_list(length=limit)
+
+
+# ---------------------------------------------------------
+# Recent Users
+# ---------------------------------------------------------
+
+    async def recent_users(
+        self,
+        limit: int = 20,
+    ) -> list[dict[str, Any]]:
+
+        cursor = (
+            self.collection
+            .find({})
+            .sort("created_at", -1)
+            .limit(limit)
+        )
+
+        return await cursor.to_list(length=limit)
+
+
+# ---------------------------------------------------------
+# Active Users
+# ---------------------------------------------------------
+
+    async def active_users(
+        self,
+        limit: int = 20,
+    ) -> list[dict[str, Any]]:
+
+        cursor = (
+            self.collection
+            .find({})
+            .sort("last_activity", -1)
+            .limit(limit)
+        )
+
+        return await cursor.to_list(length=limit)
+
+
+# ---------------------------------------------------------
+# Broadcast Helpers
+# ---------------------------------------------------------
+
+    async def all_user_ids(self):
+
+        async for user in self.collection.find(
+            {},
+            {
+                "_id": 0,
+                "user_id": 1,
+            },
+        ):
+            yield user["user_id"]
+
+
+# ---------------------------------------------------------
+# Delete All Users
+# ---------------------------------------------------------
+
+    async def delete_all_users(self) -> int:
+
+        result = await self.collection.delete_many({})
+
+        return result.deleted_count
+
+
+# ---------------------------------------------------------
+# Database Stats
+# ---------------------------------------------------------
+
+    async def stats(self) -> dict[str, int]:
+
+        return {
+            "users": await self.total_users(),
+            "premium": await self.total_premium_users(),
+            "banned": await self.total_banned_users(),
+        }
+
+
+# ---------------------------------------------------------
+# Cleanup Premium
+# ---------------------------------------------------------
+
+    async def cleanup_expired_premium(self) -> int:
+
+        result = await self.collection.update_many(
+            {
+                "premium": True,
+                "premium_until": {
+                    "$lt": self.now(),
+                },
+            },
+            {
+                "$set": {
+                    "premium": False,
+                    "premium_until": None,
+                },
+            },
+        )
+
+        return result.modified_count
