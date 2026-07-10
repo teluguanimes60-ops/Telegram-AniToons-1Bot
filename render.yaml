@@ -1,0 +1,72 @@
+```yaml
+services:
+  - type: web
+    name: anitoon-bot
+    runtime: python
+    plan: free
+
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+
+    startCommand: python -m main
+
+    healthCheckPath: /health
+
+    autoDeploy: true
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+
+      - key: API_ID
+        sync: false
+
+      - key: API_HASH
+        sync: false
+
+      - key: BOT_TOKEN
+        sync: false
+
+      - key: MONGO_URI
+        sync: false
+
+      - key: DATABASE_NAME
+        value: AniToonBot
+
+      - key: BOT_OWNER
+        sync: false
+
+      - key: BOT_USERNAME
+        sync: false
+
+      - key: LOG_LEVEL
+        value: INFO
+
+      - key: HOST
+        value: 0.0.0.0
+
+      - key: PORT
+        value: 10000
+
+      - key: MAX_ACTIVE_USERS
+        value: "20"
+
+      - key: MAX_CONCURRENT_DOWNLOADS
+        value: "3"
+
+      - key: MAX_CONCURRENT_UPLOADS
+        value: "3"
+
+      - key: AUTO_DELETE_TEMP
+        value: "true"
+
+      - key: AUTO_DELETE_MESSAGES
+        value: "true"
+
+      - key: FORCE_SUBSCRIBE
+        value: "false"
+
+      - key: PREMIUM_ENABLED
+        value: "true"
+```
